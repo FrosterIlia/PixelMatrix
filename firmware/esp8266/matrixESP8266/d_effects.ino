@@ -2,19 +2,28 @@ void matrixa() {
   FastLED.setBrightness(modes[mode].bright);
   main_timer.setPeriod(constrain(map(modes[mode].effect_speed, 0, 255, 1, 200), 1, 200));
   uint8_t scale = constrain(map(modes[mode].scale, 0, 255, 1, 5), 1, 5);
+
   for (int i = 0; i < NUM_LEDS - WIDTH; i++) {
     if (i / WIDTH % 2 == 0) {
 
-      leds[i] = leds[get_pixel_number(i - WIDTH * (i / WIDTH), (i / WIDTH) + 1)];
-      leds[get_pixel_number(i - WIDTH * (i / WIDTH), (i / WIDTH) + 1)].nscale8(random(3000, 10000));
+      leds[i] = leds[get_pixel_number(
+                       i - WIDTH * (i / WIDTH), (i / WIDTH) + 1
+                     )];
+      leds[get_pixel_number(
+             i - WIDTH * (i / WIDTH), (i / WIDTH) + 1)
+          ].nscale8(random(3000, 10000));
     }
     else {
-      leds[i] = leds[get_pixel_number(WIDTH - 1 - i + (WIDTH * (i / WIDTH)), (i / WIDTH) + 1)];
-      leds[get_pixel_number(WIDTH - 1 - i + (WIDTH * (i / WIDTH)), (i / WIDTH) + 1)].nscale8(random(3000, 10000));
+      leds[i] = leds[get_pixel_number(
+                       WIDTH - 1 - i + (WIDTH * (i / WIDTH)), (i / WIDTH) + 1
+                     )];
+      leds[get_pixel_number(
+             WIDTH - 1 - i + (WIDTH * (i / WIDTH)), (i / WIDTH) + 1
+           )].nscale8(random(3000, 10000));
     }
 
   }
-
+  // добавляем пиксели в первую строку
   if (!random(2)) {
     for (int i = 0; i < scale; i++) {
       leds[random(NUM_LEDS - WIDTH, NUM_LEDS)] = CRGB(0, 255, 0);
@@ -31,9 +40,8 @@ void rainbowVert() {
   for (uint16_t i = 0; i < WIDTH; i++) {
     for (uint16_t j = 0; j < HEIGHT; j++) {
 
-      leds[get_pixel_number(i, j)] = ColorFromPalette(RainbowColors_p  , (i * (float)n_index / 100)  - hue);
+      leds[get_pixel_number(i, j)] = ColorFromPalette(RainbowColors_p, (i * scale)  - hue);
     }
-    n_index = scale * 100;
   }
   hue += effect_speed;
 }
@@ -46,9 +54,8 @@ void rainbowHor() {
   for (uint16_t i = 0; i < WIDTH; i++) {
     for (uint16_t j = 0; j < HEIGHT; j++) {
 
-      leds[get_pixel_number(i, j)] = ColorFromPalette(RainbowColors_p  , (j * (float)n_index / 100)  - hue);
+      leds[get_pixel_number(i, j)] = ColorFromPalette(RainbowColors_p  , (j * scale)  - hue);
     }
-    n_index = scale * 100;
   }
   hue += effect_speed;
 }
@@ -67,11 +74,10 @@ void rainbowDiag() {
   for (x = 0; x < WIDTH; x++) {
     rainbow_counter = 0;
     while (x - rainbow_counter >= 0 && y + rainbow_counter < HEIGHT) {
-      leds[get_pixel_number(x - rainbow_counter, y + rainbow_counter)] = ColorFromPalette(RainbowColors_p  , (hue_index * (float)n_index / 100)  - hue);
+      leds[get_pixel_number(x - rainbow_counter, y + rainbow_counter)] = ColorFromPalette(RainbowColors_p  , (hue_index * scale)  - hue);
       rainbow_counter++;
 
     }
-    n_index = scale * 100;
     hue_index++;
   }
   //hue += modes[mode].effect_speed;
@@ -80,11 +86,10 @@ void rainbowDiag() {
 
     rainbow_counter = 0;
     while (x - rainbow_counter >= 0 && y + rainbow_counter < HEIGHT) {
-      leds[get_pixel_number(x - rainbow_counter, y + rainbow_counter)] = ColorFromPalette(RainbowColors_p  , (hue_index * (float)n_index / 100)  - hue);
+      leds[get_pixel_number(x - rainbow_counter, y + rainbow_counter)] = ColorFromPalette(RainbowColors_p  , (hue_index * scale)  - hue);
       rainbow_counter++;
 
     }
-    n_index = scale * 100;
     hue_index++;
   }
   hue += effect_speed;
@@ -97,7 +102,11 @@ void sinusoid() {
 
   for (int i = 0; i < WIDTH; i++) {
 
-    uint8_t row = round((float)(HEIGHT - 1) / 2 + sin((millis() - PERIOD * i) * (float)modes[mode].scale / 255 * DEG_TO_RAD) * ((float)(HEIGHT - 1) / 2));
+    uint8_t row = round((float)(HEIGHT - 1) / 2 +
+                        sin((millis() - PERIOD * i) *
+                            (float)modes[mode].scale / 255 * DEG_TO_RAD) *
+                        ((float)(HEIGHT - 1) / 2));
+
     if (i != 0) {
       if (prev > row) {
         for (int j = prev; row <= j; j--) {
@@ -196,7 +205,8 @@ void peacock() //павлин
   for (uint16_t i = 0; i < WIDTH; i++) {
     for (uint16_t j = 0; j < HEIGHT; j++) {
 
-      leds[get_pixel_number(i, j)] = ColorFromPalette(RainbowStripeColors_p , inoise8(i * scale, j * scale, counter) - hue);
+      leds[get_pixel_number(i, j)] = ColorFromPalette(RainbowStripeColors_p ,
+                                     inoise8(i * scale, j * scale, counter) - hue);
     }
   }
   counter += 20;
@@ -241,7 +251,8 @@ void party() {
   counter += 20;
 }
 
-#define running_string "Лiцей iнформацiйних технологiй"
+
+
 void running_text() {
   static int counter = 0;
   main_timer.setPeriod(modes[mode].effect_speed);
@@ -254,7 +265,7 @@ void running_text() {
   draw_text(x, (HEIGHT + FONT_HEIGHT) / 2, running_string, hsv);
   x--;
   counter = 0;
-  for (int i = 0; i < strlen(running_string); i++) {
+  for (int i = 0; i < running_string.length(); i++) { // посчитать кол-во символов
     if ((byte)running_string[i] > 127) i++; // если русский символ, то он занимает 2 байта
     counter++;
   }
@@ -530,7 +541,6 @@ void drawFrame(uint8_t pcnt, bool isColored) {                  // прорис�
 void computer_pic() {
 
   if (loadingFlag) {
-    Serial.println("cleared");
     FastLED.clear();
     FastLED.show();
     loadingFlag = false;

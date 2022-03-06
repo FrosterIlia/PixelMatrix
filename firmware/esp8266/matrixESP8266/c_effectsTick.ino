@@ -1,26 +1,33 @@
 void loop() {
 
+  if (WIFI_ENABLED && tick_timer.isReady()){
+    
+    bot.tickManual();
+    
+  }
+
+
   // опрашиваем кнопки
-  right_button.tick();
-  left_button.tick();
+  //right_button.tick();
+  //left_button.tick();
 
   //переключаем режимы
   if (right_button.isClick()) {
     if (++mode >= MODE_AMOUNT) {
       mode = 0;
-
-      FastLED.clear();
-      FastLED.show();
     }
     loadingFlag = true;
+    FastLED.clear();
+      FastLED.show();
   }
   if (left_button.isClick()) {
     if (--mode < 0) {
       mode = MODE_AMOUNT - 1;
 
-      FastLED.clear();
-      FastLED.show();
+      
     }
+    FastLED.clear();
+      FastLED.show();
     loadingFlag = true;
 
   }
@@ -60,12 +67,12 @@ void loop() {
       }
 
 
-      if (mode != 14) {
+      if (mode != 13) {
         FastLED.show();
       }
 
 
-      if (mode != 0 && mode != 10 && mode != 11 && mode != 12 && mode != 13 && mode != 14) {
+      if (mode != 0 && mode != 10 && mode != 11 && mode != 12 && mode != 13 ) {
         FastLED.clear();
       }
 
@@ -80,7 +87,6 @@ void loop() {
     EEPROM.put(1, modes);
     eeprom_flag = false;
     EEPROM.commit();
-
   }
 
 }

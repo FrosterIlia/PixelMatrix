@@ -55,18 +55,20 @@ uint16_t get_pixel_number(int8_t x, int8_t y) {
     return (THIS_Y * _WIDTH + _WIDTH - THIS_X - 1);
   }
 }
-void pixelRGB(byte x, byte y, byte color[]) { // красит пиксель по заданным координатам в любой цвет rgb
+void pixelRGB(byte x, byte y, byte color[]) {
+  // красит пиксель по заданным координатам в любой цвет rgb
   leds[get_pixel_number(x, y)] = CRGB(color[0], color[1], color[2]);
 }
-void pixelHSV(byte x, byte y, byte color[]) { // красит пиксель по заданным координатам в любой цвет hsv
+void pixelHSV(byte x, byte y, byte color[]) {
+  // красит пиксель по заданным координатам в любой цвет hsv
   leds[get_pixel_number(x, y)] = CHSV(color[0], color[1], color[2]);
 }
 
-void draw_text(int x, byte y, char text[], byte color[]) {
+void draw_text(int x, byte y, String text, byte color[]) {
   uint8_t koeef = 0;
-  for (uint8_t symbol = 0; symbol < strlen(text); symbol++) {
+  for (uint8_t symbol = 0; symbol < text.length(); symbol++) {
 
-    if ((byte)text[symbol] > 127) { // для ебучего русского языка (каждый символ русского языка занимает 2 байта в кодировке utf-8)
+    if ((byte)text[symbol] > 127) { // для русского языка (каждый символ русского языка занимает 2 байта в кодировке utf-8)
       uint8_t rus_symbol[2];
       rus_symbol[0] = text[symbol];
       rus_symbol[1] = text[symbol + 1];
@@ -94,7 +96,7 @@ void draw_text(int x, byte y, char text[], byte color[]) {
       continue;
     }
 
-    else { // если английский символ или спецсимвол (короче если хуйня занимает 1 байт)
+    else { // если английский символ или спецсимвол (короче если символ занимает 1 байт)
       if (text[symbol] == ' ') { // отрабатываем пробел
         x += FONT_WIDTH;
         continue;
@@ -119,4 +121,60 @@ void draw_text(int x, byte y, char text[], byte color[]) {
       x += FONT_WIDTH + LETTER_DISTANCE;
     }
   }
+}
+
+boolean equal_strings(char *text1, char *text2) {
+  bool flag = false;
+  if (strlen(text1) == strlen(text2)) {
+    for (int j = 0; j < strlen(text2); j++) {
+      if (text1[j] == text2[j]) {
+        flag = true;
+
+      }
+      else {
+        flag = false;
+        break;
+      }
+    }
+  }
+  if (flag) return true;
+  return false;
+
+}
+String convertUnicode(String unicodeStr){
+  
+  
+  String out = "";
+  int len = unicodeStr.length();
+  char iChar;
+  char* error;
+  for (int i = 0; i < len; i++){
+     iChar = unicodeStr[i];
+     if(iChar == '\\'){ // got escape char
+       iChar = unicodeStr[++i];
+       if(iChar == 'u'){ // got unicode hex
+         char unicode[7];
+         unicode[0] = '0';
+         unicode[1] = 'x';
+         for (int j = 0; j < 4; j++){
+           iChar = unicodeStr[++i];
+           unicode[j + 2] = iChar;
+         }
+         unicode[6] = NULL;
+         int unicodeVal;
+         sscanf(unicode,"%x", &unicodeVal);
+         unicodeVal -= 1040;
+         
+         out += (char)pgm_read_byte(&alfavit_rus[unicodeVal][0]);
+         out += (char)pgm_read_byte(&alfavit_rus[unicodeVal][1]); 
+       } else if(iChar == '/'){
+         out += iChar;
+       } else if(iChar == 'n'){
+         out += '\n';
+       }
+     } else {
+       out += iChar;
+     }
+  }
+  return out;
 }

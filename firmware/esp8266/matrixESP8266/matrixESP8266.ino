@@ -2,6 +2,11 @@
 #include "Timer.h"
 #include "GyverButton.h"
 #include <EEPROM.h>
+#include <ESP8266WiFi.h>
+#include "FastBot.h"
+#include "ESP8266TimerInterrupt.h"
+
+
 
 #define WIDTH 16
 #define HEIGHT 16
@@ -11,18 +16,31 @@
 
 #define NUM_LEDS WIDTH * HEIGHT
 
-#define PIN_MATRIX 2 //D4
-#define PIN_TOP_BUTTON 5 //D8
+#define PIN_MATRIX 4 //D4
+#define PIN_TOP_BUTTON 15 //D8
 #define PIN_RIGHT_BUTTON 12 //D6
 #define PIN_DOWN_BUTTON 4 //D2
 #define PIN_LEFT_BUTTON 14 //D5
 
+//WIFI settings
+#define WIFI_ENABLED 1
+#define WIFI_SSID "Triolan"
+#define WIFI_PASS "moroz2004"
+
+//TELEGRAM settings
+#define TOKEN "1012059373:AAGFG_Ay9LfV4i7LVZrOfuT11a04wwrexiQ"
+
+Timer tick_timer(3500);
+FastBot bot(TOKEN, 1);
+
 #define CURRENT_LIMIT 2000 // если 0, то лимит отключен
 
-#define MODE 0
+#define MODE 4
 #define MODE_AMOUNT 14
 
 #define EMPTY_BRIGHT 50
+
+
 
 CRGB leds[NUM_LEDS];
 
@@ -42,8 +60,8 @@ bool loadingFlag = true;
 Timer main_timer(PERIOD);
 
 uint8_t hue;
-uint16_t n_index = round((255 / WIDTH) * 100);
 
+String running_string = "Лiцей iнформацiйних технологiй";
 
 bool eeprom_flag = false;
 uint32_t eeprom_timer = 0;

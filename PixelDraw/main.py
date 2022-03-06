@@ -75,7 +75,7 @@ class my_colorPicker():
                         self.color = self.picker.get_color(pygame.mouse.get_pos())
 
 
-class canvas():
+class Canvas():
     def __init__(self, win, pos, size):
         self.win = win
         self.x = pos[0]
@@ -175,7 +175,7 @@ arial = pygame.font.SysFont('arial', 18)
 
 # variables for drawing
 colorSelect = my_colorPicker((0, 0), (250, 250))
-canv = canvas(win, (310, 0), (600, 600))
+canv = Canvas(win, (310, 0), (600, 600))
 row_fillBox = FillBox(win, (10, 450), 1, 50, (250, 30))
 col_fillBox = FillBox(win, (10, 490), 1, 50, (250, 30))
 row_fillBox.mode = 1
@@ -305,8 +305,9 @@ def save_pic():
                     file.write(str(x) + " ")
             # file.write(str(i))
             file.write("\n")
-    template_max = len(templates)
 
+    read_templates()
+    template_max = len(templates)
 
 def send_all_data():
     if status:
@@ -504,7 +505,7 @@ while run:
 
         template_text = arial.render(templates_names[template_index], True, (0, 0, 0))
     if template_up_but.onRelease():
-        if template_index + 1 < template_max:
+        if template_index + 1 < len(templates_names):
             template_index += 1
         else:
             template_index = 0
