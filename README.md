@@ -6,7 +6,6 @@ The matrix has different modes including diplaying different light effects, fire
 
 The computer programm is used for creating images for the matrix and sending it to the microcontroller via USB.
 
-![telegram-cloud-photo-size-2-5323513995644227086-y](https://github.com/FrosterIlia/PixelMatrix/assets/59135465/7efd4ed6-769d-457a-8a90-d4439e4c3a2b)
 ![telegram-cloud-photo-size-2-5323513995644227085-y](https://github.com/FrosterIlia/PixelMatrix/assets/59135465/606cdd5c-540f-4234-a97b-b6b3809cccdc)
 ![telegram-cloud-photo-size-2-5323513995644227086-y](https://github.com/FrosterIlia/PixelMatrix/assets/59135465/b4c6f85b-2c63-4264-9abc-c06d930dfa71)
 ![telegram-cloud-photo-size-2-5323513995644227087-y](https://github.com/FrosterIlia/PixelMatrix/assets/59135465/cc4f2ec2-8fbe-47a1-ac1d-12e13b057b39)
